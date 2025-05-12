@@ -1,0 +1,29 @@
+
+/* Seletor tag */
+h1 {
+    color: #ff0000;
+    text-align: center;
+    margin-top: 20px;
+}
+p{
+    color:gray
+}
+
+/* Seletor Classe */
+.texto-comum{
+
+    color: black;
+    text-align: left;
+}
+.t2{
+    text-decoration: underline;
+    font-weight: normal;
+}
+/* Seletor Universal */
+
+*{
+    font-family: Arial;
+    color: palegoldenrod
+}
+/* Seletor por ID */
+
