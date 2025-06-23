@@ -1,0 +1,15 @@
+*{
+    border: 1px solid blue;
+}
+html, body{
+    border: 0px solid grey;
+}
+h1, p{
+    display: inline;
+}
+a{
+    display: inline-block;
+}
+.laal{
+    width: 40%;
+}
