@@ -1,0 +1,22 @@
+ :root{
+     --base: 150px
+ }
+ *{
+    height: 100px;
+ }
+ 
+ .c{
+    background-color: red;
+    width: calc(5* var(--base));
+ }
+
+ .w1{
+    background-color: white;
+    width: calc(1* var(--base));
+    margin:auto
+ }
+ .w2{
+    background-color: white;
+      width: calc(3* var(--base));
+    margin: auto;
+ }
