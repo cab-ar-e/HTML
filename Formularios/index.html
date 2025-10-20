@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="estilos.css">
     <link rel="stylesheet" href="dragdrop.css">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 </head>
 <body>
 
@@ -50,14 +51,13 @@
 
     <label for="senha">Senha:</label>
     <input type="password" id="senha" name="senha">
-    <input type="button" id="btmostrar" name="btmostrar"  value="Mostrar" ondragstart="mostraSenha()">
+    <input type="button" id="btmostrar" name="btmostrar" value="Mostrar" onmousedown="mostraSenha()">
 </div>
 
 <div>
     <h2>Input Radio</h2>
 
     <label>Você possui alguma deficiência?</label>
-    <p></p>
 
     <input type="radio" id="deficienciaNao" name="deficiencia" value="N" checked>
     <label for="deficienciaNao">Não</label>
@@ -69,48 +69,45 @@
 <div>
     <h2>Input Checkbox</h2>
 
-    <label for="Checkbox">Qual deficiencia você possui? </label>
-    <p></p>
+    <label>Qual deficiência você possui?</label>
 
-    <input type="checkbox" name="deficienciaVisual" id="deficienciaVisual" >
-    <label for="deficienciaVisual" > Visual</label>
+    <input type="checkbox" id="deficienciaVisual" name="deficienciaVisual" value="1">
+    <label for="deficienciaVisual">Visual</label>
 
-    <input type="checkbox" name="deficienciaAuditiva" id="deficienciaAuditiva">
-    <label for="deficienciaAuditiva"> Auditiva</label>
+    <input type="checkbox" id="deficienciaAuditiva" name="deficienciaAuditiva" value="2" checked>
+    <label for="deficienciaAuditiva">Autidiva</label>
 
-    <input type="checkbox" name="deficienciaMotora" id="deficienciaMotora">
-    <label for="deficienciaMotora"> Motora</label>
+    <input type="checkbox" id="deficienciaMotora" name="deficienciaMotora" value="3">
+    <label for="deficienciaMotora">Motora</label>
 
-    <input type="checkbox" name="deficienciaMental" id="deficienciaMental">
-    <label for="deficienciaMental"> Mental</label>
+    <input type="checkbox" id="deficienciaOutra" name="deficienciaOutra" value="4">
+    <label for="deficienciaOutra">Outra</label>
 </div>
 
 <div>
-
     <h2>Input Range</h2>
 
-    <label for="Idade"> Qual é sua idade?</label>
-    <p></p>
-    <input type="range" name="idade" id="idade" min="0" max="500" value="0" step="0.001" onchange="mudavalor(this.value)"> 
-    <span id="idade_texto">0</span>
- 
+    <label for="idade">Qual a sua idade?</label>
+    <input type="range" id="idade" name="idade" min="1" max="10" value="1" step="0.5" oninput="mudaIdade(this.value)">
 
+    <span id="idadevalor">1</span>
 </div>
 
 <div>
     <h2>Select</h2>
 
     <label for="estado">Estado de Nascimento</label>
-    <select name="estado" id="estado" required>
+    <select id="estado" name="estado">
+        <option value=""></option>
         <option value="AC">Acre</option>
         <option value="AL">Alagoas</option>
         <option value="AP">Amapá</option>
         <option value="AM">Amazonas</option>
         <option value="BA">Bahia</option>
-        <option value="CE" >Ceará</option>
+        <option value="CE">Ceará</option>
         <option value="DF">Distrito Federal</option>
         <option value="ES" selected>Espírito Santo</option>
-        <option value="GO" >Goiás</option>
+        <option value="GO">Goiás</option>
         <option value="MA">Maranhão</option>
         <option value="MT">Mato Grosso</option>
         <option value="MS">Mato Grosso do Sul</option>
@@ -129,38 +126,46 @@
         <option value="SP">São Paulo</option>
         <option value="SE">Sergipe</option>
         <option value="TO">Tocantins</option>
-</select>
+    </select>    
 </div>
 
 <div>
+    <h2>Textarea</h2>
 
-    <h2>Text Area</h2>
+    <label for="redacao">Redação:</label>
+    <textarea id="redacao" name="redacao" cols="50" rows="10" placeholder="Digite aqui sua redação (máximo de 5000 caracteres)" maxlength="50" oninput="contaTexto(this.value)"></textarea>
+    <span id="qtdcaracteres">0/50</span>
+</div>
 
-    <label for="Textarea"></label>
-    <textarea id="Textarea" name="Textarea" cols="80" rows="10" placeholder="Digite aqui(max de 10 caracteres)" oninput="atualizarqtdtextarea(this.value.length)" ></textarea>
-    <span id="qtdcaracteres">0/5000</span>
+<div>
+    <h2>Campo Rich Text</h2>
+
+    <div id="editor"></div>
+</div>
+
+<h1>Campos HTML 5</h1>
+
+<h2>Campos de Data</h2>
+
+<div>
+    <h3>Input Date</h3>
+
+    <label for="dtnascimento">Data de Nascimento:</label>
+    <input type="date" id="dtnascimento" name="dtnascimento" value="2025-10-13">
 </div>
 
 
 <script src="dragdrop.js"></script>
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
 <script>
+const quill = new Quill('#editor', {
+    theme: 'snow'
+  });
+
 function boasVindas(){
     var nome = document.getElementById("nome").value;
     alert("Olá: " + nome);
-}
-function mudavalor(valor){
-
-    document.getElementById("idade_texto").innerHTML = valor;
-}
-function atualizarqtdtextarea(valor) {
-    let  spanlegal123 = document.getElementById("qtdcaracteres");
-    spanlegal123.innerHTML = valor + "/100";
-
-    if (valor > 100) {
-        spanlegal123.style.color = "red";
-    } else {
-        spanlegal123.style.color = "black";
-    }
 }
 
 function sorteDoDia() {
@@ -196,6 +201,10 @@ function mudaCor(cor){
     document.body.style.backgroundColor = cor;
 }
 
+function mudaIdade(idade){
+    document.getElementById("idadevalor").innerHTML = idade;
+}
+
 function mostraSenha(){
     var senha = document.getElementById("senha");
     var btmostrar = document.getElementById("btmostrar");
@@ -208,6 +217,10 @@ function mostraSenha(){
         senha.type = "password";
         btmostrar.value = "Mostrar";
     }
+}
+
+function contaTexto(texto){
+    document.getElementById("qtdcaracteres").innerHTML = texto.length + "/50";
 }
 </script>
 
