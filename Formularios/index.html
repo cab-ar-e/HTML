@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulários HTML</title>
+
+    <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="dragdrop.css">
+</head>
+<body>
+
+<h1>Elementos de Formulário</h1>
+
+<div>
+    <h2>Input Text e Button</h2>
+    <label for="nome">Nome Completo:</label>
+    <input type="text" class="texto" id="nome" name="nome" size="30" maxlength="30" placeholder="Digite o seu Nome Completo">
+
+    <input type="button" id="btnboasvindas" name="btnboasvindas" value="Boas Vindas!" onclick="boasVindas()">
+
+    <button id="btnsortedodia" name="btnsortedodia" onclick="sorteDoDia()">Sorte do Dia</button>
+</div>
+
+<div>
+    <h2>Input Color</h2>
+
+    <label for="corfundo">Cor de Fundo:</label>
+    <input type="color" id="corfundo" name="corfundo" onchange="mudaCor(this.value)">
+    <span id="corfundo_texto">#000000</span>
+</div>
+
+<div>
+    <h2>Input File</h2>
+    <label for="arquivo">Arquivo:</label>
+    <input type="file" id="arquivo" name="arquivo">
+</div>
+
+<div>
+    <h2>Input File com Drag and Drop</h2>
+    <div id="drop-area">
+        <p>Arraste e solte seu arquivo aqui ou clique para selecionar</p>
+        <input type="file" id="fileElem" name="fileElem" hidden>
+    </div>
+    <div id="file-list"></div>
+</div>
+
+<div>
+    <h2>Input Password</h2>
+
+    <label for="senha">Senha:</label>
+    <input type="password" id="senha" name="senha">
+    <input type="button" id="btmostrar" name="btmostrar"  value="Mostrar" ondragstart="mostraSenha()">
+</div>
+
+<div>
+    <h2>Input Radio</h2>
+
+    <label>Você possui alguma deficiência?</label>
+    <p></p>
+
+    <input type="radio" id="deficienciaNao" name="deficiencia" value="N" checked>
+    <label for="deficienciaNao">Não</label>
+
+    <input type="radio" id="deficienciaSim" name="deficiencia" value="S">
+    <label for="deficienciaSim">Sim</label>
+</div>
+
+<div>
+    <h2>Input Checkbox</h2>
+
+    <label for="Checkbox">Qual deficiencia você possui? </label>
+    <p></p>
+
+    <input type="checkbox" name="deficienciaVisual" id="deficienciaVisual" >
+    <label for="deficienciaVisual" > Visual</label>
+
+    <input type="checkbox" name="deficienciaAuditiva" id="deficienciaAuditiva">
+    <label for="deficienciaAuditiva"> Auditiva</label>
+
+    <input type="checkbox" name="deficienciaMotora" id="deficienciaMotora">
+    <label for="deficienciaMotora"> Motora</label>
+
+    <input type="checkbox" name="deficienciaMental" id="deficienciaMental">
+    <label for="deficienciaMental"> Mental</label>
+</div>
+
+<div>
+
+    <h2>Input Range</h2>
+
+    <label for="Idade"> Qual é sua idade?</label>
+    <p></p>
+    <input type="range" name="idade" id="idade" min="0" max="500" value="0" step="0.001" onchange="mudavalor(this.value)"> 
+    <span id="idade_texto">0</span>
+ 
+
+</div>
+
+<div>
+    <h2>Select</h2>
+
+    <label for="estado">Estado de Nascimento</label>
+    <select name="estado" id="estado" required>
+        <option value="AC">Acre</option>
+        <option value="AL">Alagoas</option>
+        <option value="AP">Amapá</option>
+        <option value="AM">Amazonas</option>
+        <option value="BA">Bahia</option>
+        <option value="CE" >Ceará</option>
+        <option value="DF">Distrito Federal</option>
+        <option value="ES" selected>Espírito Santo</option>
+        <option value="GO" >Goiás</option>
+        <option value="MA">Maranhão</option>
+        <option value="MT">Mato Grosso</option>
+        <option value="MS">Mato Grosso do Sul</option>
+        <option value="MG">Minas Gerais</option>
+        <option value="PA">Pará</option>
+        <option value="PB">Paraíba</option>
+        <option value="PR">Paraná</option>
+        <option value="PE">Pernambuco</option>
+        <option value="PI">Piauí</option>
+        <option value="RJ">Rio de Janeiro</option>
+        <option value="RN">Rio Grande do Norte</option>
+        <option value="RS">Rio Grande do Sul</option>
+        <option value="RO">Rondônia</option>
+        <option value="RR">Roraima</option>
+        <option value="SC">Santa Catarina</option>
+        <option value="SP">São Paulo</option>
+        <option value="SE">Sergipe</option>
+        <option value="TO">Tocantins</option>
+</select>
+</div>
+
+<div>
+
+    <h2>Text Area</h2>
+
+    <label for="Textarea"></label>
+    <textarea id="Textarea" name="Textarea" cols="80" rows="10" placeholder="Digite aqui(max de 10 caracteres)" oninput="atualizarqtdtextarea(this.value.length)" ></textarea>
+    <span id="qtdcaracteres">0/5000</span>
+</div>
+
+
+<script src="dragdrop.js"></script>
+<script>
+function boasVindas(){
+    var nome = document.getElementById("nome").value;
+    alert("Olá: " + nome);
+}
+function mudavalor(valor){
+
+    document.getElementById("idade_texto").innerHTML = valor;
+}
+function atualizarqtdtextarea(valor) {
+    let  spanlegal123 = document.getElementById("qtdcaracteres");
+    spanlegal123.innerHTML = valor + "/100";
+
+    if (valor > 100) {
+        spanlegal123.style.color = "red";
+    } else {
+        spanlegal123.style.color = "black";
+    }
+}
+
+function sorteDoDia() {
+    const mensagens = [
+        "Acredite em você e em todo o seu potencial.",
+        "Cada dia é uma nova oportunidade para recomeçar.",
+        "Seja a mudança que você deseja ver no mundo.",
+        "Você é mais forte do que imagina.",
+        "Grandes conquistas começam com pequenos passos.",
+        "Nunca é tarde para realizar seus sonhos.",
+        "O sucesso é a soma de pequenos esforços diários.",
+        "A persistência é o caminho do êxito.",
+        "Confie no processo e continue avançando.",
+        "Seu esforço de hoje será sua vitória de amanhã.",
+        "Transforme desafios em oportunidades.",
+        "A jornada é tão importante quanto o destino.",
+        "Você é capaz de ir além do que pensa.",
+        "Não desista, o próximo passo pode ser o da vitória.",
+        "A cada queda, levante-se mais forte.",
+        "O impossível é apenas algo que ainda não foi feito.",
+        "Valorize suas conquistas, por menores que sejam.",
+        "Sua atitude define a sua altitude.",
+        "Tenha coragem para seguir em frente.",
+        "Hoje é o dia perfeito para dar o seu melhor."
+    ];
+
+    const indice = Math.floor(Math.random() * mensagens.length);
+    alert(mensagens[indice]);
+}
+
+function mudaCor(cor){
+    document.getElementById("corfundo_texto").innerHTML = cor.toUpperCase();
+    document.body.style.backgroundColor = cor;
+}
+
+function mostraSenha(){
+    var senha = document.getElementById("senha");
+    var btmostrar = document.getElementById("btmostrar");
+
+    if(senha.type == "password"){
+        senha.type = "text";
+        btmostrar.value = "Esconder";
+    }
+    else{
+        senha.type = "password";
+        btmostrar.value = "Mostrar";
+    }
+}
+</script>
+
+</body>
+</html>

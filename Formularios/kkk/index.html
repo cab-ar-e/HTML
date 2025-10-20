@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Editor Rich Text — Exemplo</title>
+  <style>
+    :root{--bg:#f6f7fb;--panel:#fff;--muted:#6b7280;--accent:#0b5fff}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial}
+    .container{max-width:900px;margin:28px auto;padding:18px;background:var(--bg);box-sizing:border-box}
+    .toolbar{display:flex;gap:6px;flex-wrap:wrap;padding:8px;background:linear-gradient(180deg,#fff,#fbfdff);border-radius:8px;box-shadow:0 1px 0 rgba(0,0,0,0.04)}
+    .toolbar button, .toolbar select, .toolbar input[type="color"]{background:transparent;border:1px solid #e6e9ef;padding:8px;border-radius:6px;cursor:pointer}
+    .toolbar button.active{background:var(--accent);color:#fff;border-color:transparent}
+    #editor{min-height:280px;padding:18px;margin-top:12px;border:1px solid #e6e9ef;border-radius:8px;background:var(--panel);outline:none}
+    #editor:focus{box-shadow:0 0 0 3px rgba(11,95,255,0.08);border-color:#cfe1ff}
+    .row{display:flex;gap:12px;align-items:center;margin-top:10px}
+    .muted{color:var(--muted);font-size:13px}
+    .actions{margin-left:auto}
+    .btn-primary{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer}
+    pre{white-space:pre-wrap;background:#0f1724;color:#e6eef8;padding:12px;border-radius:6px;overflow:auto}
+    @media (max-width:600px){.toolbar{gap:4px}.container{margin:10px}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Editor Rich Text — Exemplo</h2>
+    <div class="toolbar" role="toolbar" aria-label="Barra de formatação">
+      <button type="button" data-cmd="bold" title="Negrito (Ctrl+B)"><strong>B</strong></button>
+      <button type="button" data-cmd="italic" title="Itálico (Ctrl+I)"><em>I</em></button>
+      <button type="button" data-cmd="underline" title="Sublinhado (Ctrl+U)"><u>U</u></button>
+      <button type="button" data-cmd="strikeThrough" title="Tachado">S</button>
+      <select id="formatBlock" title="Cabeçalho/Parágrafo">
+        <option value="p">Parágrafo</option>
+        <option value="h1">Título 1</option>
+        <option value="h2">Título 2</option>
+        <option value="h3">Título 3</option>
+      </select>
+      <button type="button" data-cmd="insertUnorderedList" title="Lista">• List</button>
+      <button type="button" data-cmd="insertOrderedList" title="Lista numerada">1. List</button>
+      <button type="button" data-cmd="justifyLeft" title="Alinhar esquerda">⟵</button>
+      <button type="button" data-cmd="justifyCenter" title="Centralizar">⇄</button>
+      <button type="button" data-cmd="justifyRight" title="Alinhar direita"> </button>
+      <input id="color" type="color" title="Cor do texto" />
+      <button id="createLink" type="button" title="Inserir link">🔗</button>
+      <button id="insertImage" type="button" title="Inserir imagem por URL">🖼️</button>
+      <button id="clean" type="button" title="Remover formatação">✖</button>
+      <div class="actions">
+        <button id="toggleHtml" type="button">Ver HTML</button>
+        <button id="exportHtml" class="btn-primary" type="button">Exportar HTML</button>
+      </div>
+    </div>
+
+    <div id="editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Área de edição rich text">
+      <p></p>
+    </div>
+
+    <div class="row">
+      <div class="muted">Conteúdo atual: <span id="chars">0</span> caracteres</div>
+    </div>
+
+    <div id="htmlView" style="display:none;margin-top:12px">
+      <h4>HTML gerado</h4>
+      <pre id="htmlPre"></pre>
+    </div>
+  </div>
+
+  <script>
+    // Funções utilitárias
+    const editor = document.getElementById('editor');
+    const chars = document.getElementById('chars');
+    const htmlView = document.getElementById('htmlView');
+    const htmlPre = document.getElementById('htmlPre');
+
+    // Atualiza contador de caracteres
+    function updateCount(){
+      chars.textContent = editor.innerText.trim().length;
+    }
+    editor.addEventListener('input', updateCount);
+    updateCount();
+
+    // Barra de ferramentas (usa document.execCommand para simplicidade)
+    document.querySelectorAll('[data-cmd]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const cmd = btn.dataset.cmd;
+        document.execCommand(cmd, false, null);
+        editor.focus();
+        btn.classList.toggle('active', document.queryCommandState(cmd));
+      });
+    });
+
+    // select de blocos (p, h1, h2...)
+    document.getElementById('formatBlock').addEventListener('change', function(){
+      const val = this.value;
+      document.execCommand('formatBlock', false, val);
+      editor.focus();
+    });
+
+    // cor
+    document.getElementById('color').addEventListener('input', function(){
+      document.execCommand('foreColor', false, this.value);
+      editor.focus();
+    });
+
+    // link
+    document.getElementById('createLink').addEventListener('click', ()=>{
+      const url = prompt('URL do link (comece com http:// ou https://)');
+      if(url) document.execCommand('createLink', false, url);
+      editor.focus();
+    });
+
+    // imagem via URL
+    document.getElementById('insertImage').addEventListener('click', ()=>{
+      const url = prompt('URL da imagem');
+      if(url) document.execCommand('insertImage', false, url);
+      editor.focus();
+    });
+
+    // limpar formatação simples
+    document.getElementById('clean').addEventListener('click', ()=>{
+      const selHtml = getSelectionHtml();
+      if(!selHtml) return; // nada selecionado
+      // substitui seleção por versão sem tags
+      const text = window.getSelection().toString();
+      document.execCommand('insertText', false, text);
+      editor.focus();
+    });
+
+    // alternar visualização HTML
+    document.getElementById('toggleHtml').addEventListener('click', ()=>{
+      const showing = htmlView.style.display !== 'none';
+      if(showing){ htmlView.style.display = 'none'; }
+      else{ htmlPre.textContent = editor.innerHTML; htmlView.style.display = 'block'; }
+    });
+
+
+    // pega HTML da seleção (utilitário)
+    function getSelectionHtml(){
+      const sel = window.getSelection();
+      if(!sel || sel.rangeCount===0) return '';
+      const container = document.createElement('div');
+      for(let i=0;i<sel.rangeCount;i++) container.appendChild(sel.getRangeAt(i).cloneContents());
+      return container.innerHTML;
+    }
+
+    // Atalhos de teclado (negrito/italico/sublinhado já nativos, aqui tratamos Ctrl+S para salvar)
+    document.addEventListener('keydown', (e)=>{
+      if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='s'){
+        e.preventDefault();
+        document.getElementById('exportHtml').click();
+      }
+    });
+
+    // Segurança básica: evitar colar com estilos inline indesejados
+    editor.addEventListener('paste', (e)=>{
+      e.preventDefault();
+      const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+      document.execCommand('insertText', false, text);
+    });
+  </script>
+</body>
+</html>
